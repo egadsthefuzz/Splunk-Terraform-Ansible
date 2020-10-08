@@ -4,6 +4,23 @@
 
   tasks:
     - block:
+      - name: "format xvdz as ext4 with no root reserve if it's not formatted"
+        filesystem:
+          fstype: ext4
+          dev: /dev/xvdz1
+          opts: -m 0
+          force: no
+          resizefs: yes
+        ignore_errors: True
+
+      - name: "mount /dev/xvdz as /opt"
+        mount:
+          path: /opt
+          src: /dev/xvdz1
+          fstype: ext4
+          opts: rw
+          state: mounted
+
       - name: "Download and extract Splunk"
         unarchive:
           src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
@@ -38,7 +55,7 @@
           - inputs.conf
           - outputs.conf
 
-      - name:
+      - name: "install ufw"
         apt:
           name: ufw
           state: present
@@ -60,6 +77,23 @@
       tags: cluster_master
 
     - block:
+      - name: "format xvdz as ext4 with no root reserve if it's not formatted"
+        filesystem:
+          fstype: ext4
+          dev: /dev/xvdz1
+          opts: -m 0
+          force: no
+          resizefs: yes
+        ignore_errors: True
+
+      - name: "mount /dev/xvdz as /opt"
+        mount:
+          path: /opt
+          src: /dev/xvdz1
+          fstype: ext4
+          opts: rw
+          state: mounted
+
       - name: "download and extract Splunk"
         unarchive:
           src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
@@ -86,7 +120,7 @@
           - user-seed.conf
           - limits.conf
 
-      - name:
+      - name: "install ufw"
         apt:
           name: ufw
           state: present
@@ -109,6 +143,23 @@
       tags: indexers
 
     - block:
+      - name: "format xvdz as ext4 with no root reserve if it's not formatted"
+        filesystem:
+          fstype: ext4
+          dev: /dev/xvdz1
+          opts: -m 0
+          force: no
+          resizefs: yes
+        ignore_errors: True
+
+      - name: "mount /dev/xvdz as /opt"
+        mount:
+          path: /opt
+          src: /dev/xvdz1
+          fstype: ext4
+          opts: rw
+          state: mounted
+
       - name: "Download and extract Splunk"
         unarchive:
           src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
@@ -129,7 +180,7 @@
           - limits.conf
           - inputs.conf
 
-      - name:
+      - name: "install ufw"
         apt:
           name: ufw
           state: present
@@ -158,6 +209,23 @@
       tags: search_heads
 
     - block:
+      - name: "format xvdz as ext4 with no root reserve if it's not formatted"
+        filesystem:
+          fstype: ext4
+          dev: /dev/xvdz1
+          opts: -m 0
+          force: no
+          resizefs: yes
+        ignore_errors: True
+
+      - name: "mount /dev/xvdz as /opt"
+        mount:
+          path: /opt
+          src: /dev/xvdz1
+          fstype: ext4
+          opts: rw
+          state: mounted
+
       - name: "Download and extract Splunk"
         unarchive:
           src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
@@ -177,7 +245,7 @@
           - ui-tour.conf
           - inputs.conf
 
-      - name:
+      - name: "install ufw"
         apt:
           name: ufw
           state: present
@@ -200,6 +268,22 @@
       tags: search_head_deployer
 
     - block:
+      - name: "format xvdz as ext4 with no root reserve if it's not formatted"
+        filesystem:
+          fstype: ext4
+          dev: /dev/xvdz1
+          opts: -m 0
+          force: no
+          resizefs: yes
+
+      - name: "mount /dev/xvdz as /opt"
+        mount:
+          path: /opt
+          src: /dev/xvdz1
+          fstype: ext4
+          opts: rw
+          state: mounted
+
       - name: "Download and extract Splunk"
         unarchive:
           src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
@@ -220,7 +304,7 @@
           - limits.conf
           - inputs.conf
 
-      - name:
+      - name: "install ufw"
         apt:
           name: ufw
           state: present
