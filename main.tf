@@ -33,6 +33,7 @@ resource aws_key_pair ec2_key {
   public_key = data.local_file.public_key.content
 }
 
+# The comma after the inventory IP is actually right and important '${self.public_ip},' https://stackoverflow.com/questions/17188147/how-to-run-ansible-without-specifying-the-inventory-but-the-host-directly
 # Create the vms - Cluster Master
 resource aws_instance master {
   ami             = var.ami
@@ -40,7 +41,7 @@ resource aws_instance master {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'cluster_master_public_ip=${self.public_ip}' -e 'splunk_password=${var.splunk_password}'  -e 'sites_string=site1,site2' -t cluster_master -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'cluster_master_public_ip=${self.public_ip}' -e 'splunk_password=${var.splunk_password}'  -e 'sites_string=site1,site2' -t cluster_master -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Cluster Master"
@@ -54,7 +55,7 @@ resource aws_instance indexer1 {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'idx_num=1' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site1' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'idx_num=1' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site1' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Indexer 1"
@@ -68,7 +69,7 @@ resource aws_instance indexer2 {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'idx_num=2' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site2' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'idx_num=2' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site2' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Indexer 2"
@@ -82,7 +83,7 @@ resource aws_instance search_head_deployer {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'role_title=search_head_deployer' -e 'deployer_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_head_deployer -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_deployer' -e 'deployer_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_head_deployer -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Search Head Deployer"
@@ -97,7 +98,7 @@ resource aws_instance search_head_1 {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'role_title=search_head_1' -e 'shcluster_label=var.shcluster_label' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_1' -e 'shcluster_label=var.shcluster_label' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Search Head 1"
@@ -111,7 +112,7 @@ resource aws_instance search_head_2 {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'role_title=search_head_2' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_2' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Search Head 2"
@@ -125,7 +126,7 @@ resource aws_instance search_head_3 {
   key_name        = aws_key_pair.ec2_key.key_name
   security_groups = [aws_security_group.splunk_generic.name]
   provisioner local-exec {
-    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip}' master.yml -e 'role_title=search_head_3' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -e 'sh1=${aws_instance.search_head_1.public_ip}' -e sh2='${aws_instance.search_head_2.public_ip}' -t search_head_captain -e 'ansible_python_interpreter=/usr/bin/python3'"
+    command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_3' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -e 'sh1=${aws_instance.search_head_1.public_ip}' -e sh2='${aws_instance.search_head_2.public_ip}' -t search_head_captain -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
   tags = {
     Name = "Search Head 3"
