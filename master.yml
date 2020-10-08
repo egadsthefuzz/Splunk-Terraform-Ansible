@@ -6,7 +6,7 @@
     - block:
       - name: "Download and extract Splunk"
         unarchive:
-          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true"
+          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
           dest: "/opt"
           remote_src: yes
           mode: 0755
@@ -38,16 +38,22 @@
           - inputs.conf
           - outputs.conf
 
+      - name:
+        apt:
+          name: ufw
+          state: present
+          update_cache: yes
+
       - name: "open firewall port for Splunk"
         ufw:
           rule: allow
           port: "{{ item }}"
         loop:
-          - 9997
-          - 8000
-          - 8089
-          - 8191
-          - 9887
+          - '9997'
+          - '8000'
+          - '8089'
+          - '8191'
+          - '9887'
 
       - name: "start Splunk"
         shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
@@ -56,7 +62,7 @@
     - block:
       - name: "download and extract Splunk"
         unarchive:
-          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true"
+          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
           dest: "/opt"
           remote_src: yes
           mode: 0755
@@ -80,16 +86,22 @@
           - user-seed.conf
           - limits.conf
 
+      - name:
+        apt:
+          name: ufw
+          state: present
+          update_cache: yes
+
       - name: "open firewall port for Splunk output"
         ufw:
           rule: allow
           port: "{{ item }}"
         loop:
-          - 9997
-          - 8000
-          - 8080
-          - 8089
-          - 8191
+          - '9997'
+          - '8000'
+          - '8080'
+          - '8089'
+          - '8191'
 
       - name: "start Splunk"
         shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
@@ -99,7 +111,7 @@
     - block:
       - name: "Download and extract Splunk"
         unarchive:
-          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true"
+          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
           dest: "/opt"
           remote_src: yes
           mode: 0755
@@ -117,17 +129,22 @@
           - limits.conf
           - inputs.conf
 
+      - name:
+        apt:
+          name: ufw
+          state: present
+          update_cache: yes
+
       - name: "open firewall port for Splunk output"
         ufw:
           rule: allow
           port: "{{ item }}"
         loop:
-          - 9997
-          - 8000
-          - 8080
-          - 8089
-          - 8181
-          - 8191
+          - '9997'
+          - '8000'
+          - '8080'
+          - '8089'
+          - '8181'
 
       - name: "start Splunk"
         shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
@@ -143,7 +160,7 @@
     - block:
       - name: "Download and extract Splunk"
         unarchive:
-          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true"
+          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
           dest: "/opt"
           remote_src: yes
           mode: 0755
@@ -160,16 +177,22 @@
           - ui-tour.conf
           - inputs.conf
 
+      - name:
+        apt:
+          name: ufw
+          state: present
+          update_cache: yes
+
       - name: "open firewall port for Splunk output"
         ufw:
           rule: allow
           port: "{{ item }}"
         loop:
-          - 9997
-          - 8000
-          - 8080
-          - 8089
-          - 8191
+          - '9997'
+          - '8000'
+          - '8080'
+          - '8089'
+          - '8191'
 
       - name: "start Splunk"
         shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
@@ -179,7 +202,7 @@
     - block:
       - name: "Download and extract Splunk"
         unarchive:
-          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=7.2.6&product=splunk&filename=splunk-7.2.6-c0bf0f679ce9-Linux-x86_64.tgz&wget=true"
+          src: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.6&product=splunk&filename=splunk-8.0.6-152fb4b2bb96-Linux-x86_64.tgz&wget=true"
           dest: "/opt"
           remote_src: yes
           mode: 0755
@@ -197,17 +220,22 @@
           - limits.conf
           - inputs.conf
 
+      - name:
+        apt:
+          name: ufw
+          state: present
+          update_cache: yes
+
       - name: "open firewall port for Splunk output"
         ufw:
           rule: allow
           port: "{{ item }}"
         loop:
-          - 9997
-          - 8000
-          - 8080
-          - 8089
-          - 8181
-          - 8191
+          - '9997'
+          - '8000'
+          - '8080'
+          - '8089'
+          - '8181'
 
       - name: "start Splunk"
         shell: "/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt"
