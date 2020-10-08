@@ -40,10 +40,10 @@ resource aws_instance "master" {
   instance_type     = var.cluster_master_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_0
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.master.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'cluster_master_public_ip=${self.public_ip}' -e 'splunk_password=${var.splunk_password}'  -e 'sites_string=site1,site2,site3' -t cluster_master -e 'ansible_python_interpreter=/usr/bin/python3' -e 'cluster_master_active=true' -e 'cluster_master_site=site1'"
@@ -59,10 +59,10 @@ resource aws_instance "master2" {
   instance_type     = var.cluster_master_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_1
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.master2.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'cluster_master_public_ip=${self.public_ip}' -e 'splunk_password=${var.splunk_password}'  -e 'sites_string=site1,site2,site3' -t cluster_master -e 'ansible_python_interpreter=/usr/bin/python3' -e 'cluster_master_active=false' -e 'cluster_master_site=site2'"
@@ -78,10 +78,10 @@ resource aws_instance "master3" {
   instance_type     = var.cluster_master_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_2
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.master3.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'cluster_master_public_ip=${self.public_ip}' -e 'splunk_password=${var.splunk_password}'  -e 'sites_string=site1,site2,site3' -t cluster_master -e 'ansible_python_interpreter=/usr/bin/python3' -e 'cluster_master_active=false' -e 'cluster_master_site=site3'"
@@ -97,10 +97,10 @@ resource aws_instance "indexer1" {
   instance_type     = var.indexer_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_0
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.indexer1.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'idx_num=1' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site1' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
@@ -116,10 +116,10 @@ resource aws_instance "indexer2" {
   instance_type     = var.indexer_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_1
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.indexer2.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'idx_num=2' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site2' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
@@ -135,10 +135,10 @@ resource aws_instance "indexer3" {
   instance_type     = var.indexer_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_2
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.indexer3.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'idx_num=3' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site3' -t indexers -e 'ansible_python_interpreter=/usr/bin/python3'"
@@ -154,10 +154,10 @@ resource aws_instance "search_head_deployer" {
   instance_type     = var.generic_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_0
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.search_head_deployer.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_deployer' -e 'deployer_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_head_deployer -e 'ansible_python_interpreter=/usr/bin/python3'"
@@ -174,10 +174,10 @@ resource aws_instance "search_head_1" {
   instance_type     = var.search_head_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_0
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.search_head_1.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_1' -e 'shcluster_label=var.shcluster_label' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
@@ -193,11 +193,11 @@ resource aws_instance "search_head_2" {
   instance_type     = var.search_head_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_1
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.search_head_2.id
     device_index         = 0
-  }
+    security_groups   = [aws_security_group.splunk_generic.name]
+}
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_2' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -t search_heads -e 'ansible_python_interpreter=/usr/bin/python3'"
   }
@@ -212,10 +212,10 @@ resource aws_instance "search_head_3" {
   instance_type     = var.search_head_size
   key_name          = aws_key_pair.ec2_key.key_name
   availability_zone = var.availability_zone_2
-  security_groups   = [aws_security_group.splunk_generic.name]
   network_interface {
     network_interface_id = aws_network_interface.search_head_3.id
     device_index         = 0
+    security_groups   = [aws_security_group.splunk_generic.name]
   }
   provisioner local-exec {
     command = "sleep 20; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' master.yml -e 'role_title=search_head_3' -e 'shcluster_label=${var.shcluster_label}' -e 'shc_pass=${var.shc_pass4SymmKey}' -e 'deployer_url=${aws_instance.search_head_deployer.public_ip}' -e 'shc_rep_factor=${var.shc_rep_factor}' -e 'shc_rep_port=${var.shc_rep_port}' -e 'self_ip=${self.public_ip}' -e 'cluster_master_public_ip=${aws_instance.master.public_ip}' -e 'splunk_password=${var.splunk_password}' -e 'site_string=site0' -e 'sh1=${aws_instance.search_head_1.public_ip}' -e sh2='${aws_instance.search_head_2.public_ip}' -t search_head_captain -e 'ansible_python_interpreter=/usr/bin/python3'"
