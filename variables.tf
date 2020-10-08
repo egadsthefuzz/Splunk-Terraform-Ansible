@@ -69,6 +69,19 @@ variable "generic_size" {
   default = "t2.micro"
 }
 
+# Define AZ's to use
+variable "availability_zone_0" {
+  default = "ap-southeast-2a"
+}
+
+variable "availability_zone_1" {
+  default = "ap-southeast-2b"
+}
+
+variable "availability_zone_2" {
+  default = "ap-southeast-2c"
+}
+
 # Define Splunk ports
 
 # Splunk web interface port
