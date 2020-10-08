@@ -1,7 +1,5 @@
 # AWS credentials - to avoid storing creds in a file in plain text
 # you should set these in your terminal before calling Terraform.
-# However, as this is a proof of concept, I'm going to store them
-# here for simplicity and ease.
 
 variable "shared_credentials" {
   default = "/home/william/.aws/credentials"
@@ -127,4 +125,20 @@ variable "hec_port" {
 # SSH Daemon port
 variable "ssh_port" {
   default = "22"
+}
+
+variable "cidr_block" {
+  default = "172.30.0.0/22"
+}
+
+variable "subnet_1" {
+  default = "172.30.1.0/24"
+}
+
+variable "subnet_2" {
+  default = "172.30.2.0/24"
+}
+
+variable "subnet_3" {
+  default = "172.30.3.0/24"
 }
