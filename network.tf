@@ -1,3 +1,10 @@
+resource aws_internet_gateway "splunk_gw" {
+  vpc_id = aws_vpc.splunk_vpc.id
+  tags = {
+    Name = "splunk-cluster-env"
+  }
+}
+
 # Define the virtual private cloud
 resource aws_vpc "splunk_vpc" {
   cidr_block                = var.cidr_block
@@ -12,6 +19,8 @@ resource aws_subnet "splunk_subnet_1" {
   vpc_id            = aws_vpc.splunk_vpc.id
   cidr_block        = var.subnet_1
   availability_zone = var.availability_zone_0
+  map_public_ip_on_launch = true
+  depends_on = [aws_internet_gateway.splunk_gw]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -21,6 +30,8 @@ resource aws_subnet "splunk_subnet_2" {
   vpc_id            = aws_vpc.splunk_vpc.id
   cidr_block        = var.subnet_2
   availability_zone = var.availability_zone_1
+  map_public_ip_on_launch = true
+  depends_on = [aws_internet_gateway.splunk_gw]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -30,6 +41,8 @@ resource aws_subnet "splunk_subnet_3" {
   vpc_id            = aws_vpc.splunk_vpc.id
   cidr_block        = var.subnet_3
   availability_zone = var.availability_zone_2
+  map_public_ip_on_launch = true
+  depends_on = [aws_internet_gateway.splunk_gw]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -37,7 +50,8 @@ resource aws_subnet "splunk_subnet_3" {
 
 resource aws_network_interface "master" {
   subnet_id   = aws_subnet.splunk_subnet_1.id
-  private_ips = ["172.30.1.5"]
+  private_ips = [var.master_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -45,7 +59,8 @@ resource aws_network_interface "master" {
 
 resource aws_network_interface "master2" {
   subnet_id   = aws_subnet.splunk_subnet_2.id
-  private_ips = ["172.30.2.5"]
+  private_ips = [var.master2_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -53,7 +68,8 @@ resource aws_network_interface "master2" {
 
 resource aws_network_interface "master3" {
   subnet_id   = aws_subnet.splunk_subnet_3.id
-  private_ips = ["172.30.3.5"]
+  private_ips = [var.master3_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -61,7 +77,8 @@ resource aws_network_interface "master3" {
 
 resource aws_network_interface "indexer1" {
   subnet_id   = aws_subnet.splunk_subnet_1.id
-  private_ips = ["172.30.1.10"]
+  private_ips = [var.indexer1_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -69,7 +86,8 @@ resource aws_network_interface "indexer1" {
 
 resource aws_network_interface "indexer2" {
   subnet_id   = aws_subnet.splunk_subnet_2.id
-  private_ips = ["172.30.2.10"]
+  private_ips = [var.indexer2_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -77,7 +95,8 @@ resource aws_network_interface "indexer2" {
 
 resource aws_network_interface "indexer3" {
   subnet_id   = aws_subnet.splunk_subnet_3.id
-  private_ips = ["172.30.3.10"]
+  private_ips = [var.indexer3_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -85,7 +104,8 @@ resource aws_network_interface "indexer3" {
 
 resource aws_network_interface "search_head_deployer" {
   subnet_id   = aws_subnet.splunk_subnet_1.id
-  private_ips = ["172.30.1.50"]
+  private_ips = [var.search_head_deployer_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -93,7 +113,8 @@ resource aws_network_interface "search_head_deployer" {
 
 resource aws_network_interface "search_head_1" {
   subnet_id   = aws_subnet.splunk_subnet_1.id
-  private_ips = ["172.30.1.51"]
+  private_ips = [var.search_head_1_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -101,7 +122,8 @@ resource aws_network_interface "search_head_1" {
 
 resource aws_network_interface "search_head_2" {
   subnet_id   = aws_subnet.splunk_subnet_2.id
-  private_ips = ["172.30.1.51"]
+  private_ips = [var.search_head_2_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
@@ -109,12 +131,82 @@ resource aws_network_interface "search_head_2" {
 
 resource aws_network_interface "search_head_3" {
   subnet_id   = aws_subnet.splunk_subnet_3.id
-  private_ips = ["172.30.3.51"]
+  private_ips = [var.search_head_3_private_ip]
+  security_groups   = [aws_security_group.splunk_generic.id]
   tags = {
     Name = "splunk-cluster-env"
   }
 }
 
+resource "aws_eip" "master" {
+  vpc = true
+  instance                  = aws_instance.master.id
+  associate_with_private_ip = var.master_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "master2" {
+  vpc = true
+  instance                  = aws_instance.master2.id
+  associate_with_private_ip = var.master2_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "master3" {
+  vpc = true
+  instance                  = aws_instance.master3.id
+  associate_with_private_ip = var.master3_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "indexer1" {
+  vpc = true
+  instance                  = aws_instance.indexer1.id
+  associate_with_private_ip = var.indexer1_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "indexer2" {
+  vpc = true
+  instance                  = aws_instance.indexer2.id
+  associate_with_private_ip = var.indexer2_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "indexer3" {
+  vpc = true
+  instance                  = aws_instance.indexer3.id
+  associate_with_private_ip = var.indexer3_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "search_head_deployer" {
+  vpc = true
+  instance                  = aws_instance.search_head_deployer.id
+  associate_with_private_ip = var.search_head_deployer_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "search_head_1" {
+  vpc = true
+  instance                  = aws_instance.search_head_1.id
+  associate_with_private_ip = var.search_head_1_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "search_head_2" {
+  vpc = true
+  instance                  = aws_instance.search_head_2.id
+  associate_with_private_ip = var.search_head_2_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
+
+resource "aws_eip" "search_head_3" {
+  vpc = true
+  instance                  = aws_instance.search_head_3.id
+  associate_with_private_ip = var.search_head_3_private_ip
+  depends_on                = [aws_internet_gateway.splunk_gw]
+}
 
 # Define a security group with ingress/egress rules
 resource aws_security_group "splunk_generic" {

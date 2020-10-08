@@ -142,3 +142,43 @@ variable "subnet_2" {
 variable "subnet_3" {
   default = "172.30.3.0/24"
 }
+
+variable "search_head_3_private_ip" {
+  default = "172.30.3.51"
+}
+
+variable "search_head_2_private_ip" {
+  default = "172.30.2.51"
+}
+
+variable "search_head_1_private_ip" {
+  default = "172.30.1.51"
+}
+
+variable "search_head_deployer_private_ip" {
+  default = "172.30.1.50"
+}
+
+variable "indexer3_private_ip" {
+  default = "172.30.3.10"
+}
+
+variable "indexer2_private_ip" {
+  default = "172.30.2.10"
+}
+
+variable "indexer1_private_ip" {
+  default = "172.30.1.10"
+}
+
+variable "master3_private_ip" {
+  default = "172.30.3.5"
+}
+
+variable "master2_private_ip" {
+  default = "172.30.2.5"
+}
+
+variable "master_private_ip" {
+  default = "172.30.1.5"
+}
